@@ -1,10 +1,17 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-
 export const getFestiveMessage = async (recipientName: string): Promise<string> => {
   try {
+    // Obtenemos la API_KEY de forma segura
+    const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
+    
+    if (!apiKey) {
+      console.warn("API_KEY no encontrada. Usando mensaje por defecto.");
+      return `¡Felicidades! Tu amigo invisible es ${recipientName}. ¡Que pases una excelente Navidad!`;
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Escribe un mensaje corto, festivo y emocionante en español (máximo 40 palabras) para revelar el Amigo Invisible. El nombre es: ${recipientName}. Usa un tono navideño y alegre.`,
@@ -22,6 +29,10 @@ export const getFestiveMessage = async (recipientName: string): Promise<string> 
 
 export const getChristmasRiddle = async (): Promise<{ riddle: string, answer: string }> => {
   try {
+    const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
+    if (!apiKey) throw new Error("No API Key");
+
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: "Genera una adivinanza navideña sencilla en español con una sola palabra de respuesta. Formato JSON.",

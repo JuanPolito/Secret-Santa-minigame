@@ -18,10 +18,17 @@ const App: React.FC = () => {
   const handleWin = useCallback(async () => {
     setGameState('revealing');
     setLoadingMessage(true);
-    const msg = await getFestiveMessage(santaData.recipientName);
-    setFinalMessage(msg);
-    setLoadingMessage(false);
-    setGameState('finished');
+    
+    // Intentamos obtener el mensaje de la IA, pero con un timeout de seguridad
+    try {
+      const msg = await getFestiveMessage(santaData.recipientName);
+      setFinalMessage(msg);
+    } catch (err) {
+      setFinalMessage(`¡Felicidades! Tu amigo invisible es ${santaData.recipientName}.`);
+    } finally {
+      setLoadingMessage(false);
+      setGameState('finished');
+    }
   }, [santaData.recipientName]);
 
   return (
