@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { GameState, SecretSantaData } from './types';
 import Snowfall from './components/Snowfall';
 import ChristmasGame from './components/ChristmasGame';
@@ -7,15 +7,12 @@ import { getFestiveMessage } from './services/geminiService';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>('setup');
-  const [santaData, setSantaData] = useState<SecretSantaData>({ recipientName: '' });
+  const [santaData] = useState<SecretSantaData>({ recipientName: 'Juan' });
   const [finalMessage, setFinalMessage] = useState<string>('');
   const [loadingMessage, setLoadingMessage] = useState(false);
 
-  const startGameSetup = (name: string) => {
-    if (name.trim()) {
-      setSantaData({ recipientName: name });
-      setGameState('intro');
-    }
+  const startGame = () => {
+    setGameState('intro');
   };
 
   const handleWin = useCallback(async () => {
@@ -34,36 +31,28 @@ const App: React.FC = () => {
       <div className="z-10 w-full max-w-2xl bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-2xl">
         
         {gameState === 'setup' && (
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-10 py-6">
             <h1 className="text-6xl font-christmas text-white drop-shadow-lg">
               Amigo Invisible Mágico
             </h1>
-            <p className="text-white/80 text-lg">
-              Configura tu aventura navideña...
-            </p>
-            <div className="space-y-4 max-w-sm mx-auto">
-              <input
-                type="text"
-                placeholder="Nombre del Amigo Invisible..."
-                className="w-full px-6 py-4 rounded-full bg-white/20 border border-white/30 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all text-xl font-semibold"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') startGameSetup((e.target as HTMLInputElement).value);
-                }}
-                id="name-input"
-              />
+            
+            <div className="space-y-6 px-4">
+              <p className="text-white/90 text-3xl font-light italic leading-relaxed">
+                "Esta navidad tu amigo secreto soy yo y te cree este videojuego para que reveles mi identidad."
+              </p>
+              <p className="text-yellow-400 text-4xl font-christmas animate-pulse">
+                ¡Exitos!
+              </p>
+            </div>
+
+            <div className="max-w-sm mx-auto pt-4">
               <button
-                onClick={() => {
-                  const input = document.getElementById('name-input') as HTMLInputElement;
-                  startGameSetup(input.value);
-                }}
-                className="w-full py-4 rounded-full bg-yellow-500 hover:bg-yellow-400 text-red-900 font-bold text-xl transition-transform hover:scale-105 active:scale-95 shadow-lg"
+                onClick={startGame}
+                className="w-full py-5 rounded-full bg-yellow-500 hover:bg-yellow-400 text-red-900 font-black text-2xl transition-transform hover:scale-105 active:scale-95 shadow-xl uppercase tracking-widest"
               >
-                ¡Comenzar Historia!
+                ¡Empezar Juego!
               </button>
             </div>
-            <p className="text-xs text-white/50 italic">
-              *Ingresa el nombre de la persona a quien le darás el regalo*
-            </p>
           </div>
         )}
 
@@ -108,7 +97,7 @@ const App: React.FC = () => {
               <div className="space-y-6">
                 <div className="p-8 bg-green-800/50 rounded-2xl border-2 border-yellow-500 shadow-inner">
                    <h3 className="text-3xl font-bold text-white mb-4">Tu amigo invisible es...</h3>
-                   <div className="text-5xl font-christmas text-yellow-300 animate-bounce">
+                   <div className="text-6xl font-christmas text-yellow-300 animate-bounce tracking-widest">
                      {santaData.recipientName}
                    </div>
                 </div>
@@ -121,7 +110,7 @@ const App: React.FC = () => {
                   onClick={() => setGameState('setup')}
                   className="px-8 py-3 rounded-full bg-white text-red-800 font-bold hover:bg-red-100 transition-colors"
                 >
-                  Jugar de nuevo
+                  Volver al inicio
                 </button>
               </div>
             )}
