@@ -1,9 +1,9 @@
 
 import React, { useState, useCallback } from 'react';
-import { GameState, SecretSantaData } from './types';
-import Snowfall from './components/Snowfall';
-import ChristmasGame from './components/ChristmasGame';
-import { getFestiveMessage } from './services/geminiService';
+import { GameState, SecretSantaData } from './types.ts';
+import Snowfall from './components/Snowfall.tsx';
+import ChristmasGame from './components/ChristmasGame.tsx';
+import { getFestiveMessage } from './services/geminiService.ts';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>('setup');
@@ -19,7 +19,6 @@ const App: React.FC = () => {
     setGameState('revealing');
     setLoadingMessage(true);
     
-    // Intentamos obtener el mensaje de la IA, pero con un timeout de seguridad
     try {
       const msg = await getFestiveMessage(santaData.recipientName);
       setFinalMessage(msg);
